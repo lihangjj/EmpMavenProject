@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="kaptcha-0.0.9">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/kaptcha-0.0.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/filters-2.0.235.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
