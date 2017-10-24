@@ -145,7 +145,7 @@ public abstract class DispatcherServlet extends HttpServlet {
                 this.handleRequest();// 处理参数与简单Java类之间的自动赋值
                 try { // 只有将对应的数据都准备完毕了，才可以执行以下方法
                     Method method = this.getClass().getDeclaredMethod(status);
-                    method.setAccessible(true);
+                    method.setAccessible(true);//取消方法封装
                     path = this.getPath((String) method.invoke(this));// 反射调用方法
                 } catch (Exception e) {
                     e.printStackTrace();
