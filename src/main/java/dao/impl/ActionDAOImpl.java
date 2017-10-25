@@ -4,9 +4,7 @@ import dao.AbstractDAOImpl;
 import dao.IActionDAO;
 import vo.Action;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ActionDAOImpl extends AbstractDAOImpl<Integer, Action> implements IActionDAO {
@@ -30,5 +28,17 @@ public class ActionDAOImpl extends AbstractDAOImpl<Integer, Action> implements I
             list.add(action);
         }
         return list;
+    }
+
+    @Override
+    public boolean verifyPermission(String mid, String permission) throws Exception {
+        sql = "select count(*) from action where flag=" + "\'" + permission + "\' AND actid in(SELECT actid from role_action " +
+                "where rid in(SELECT rid from member where mid=\'" + mid + "\'))";
+        pre = conn.prepareStatement(sql);
+        res = pre.executeQuery();
+        while (res.next()) {
+            return res.getInt(1) > 0;
+        }
+        return false;
     }
 }

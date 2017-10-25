@@ -31,11 +31,11 @@
                     <div class="form-bottom" style="background: white;">
                         <div>
                             <div>${msg}</div>
-                            <div><span id="mytime">3</span>秒后跳转到<a href="<%=basePath%>${url}">首页</a>！</div>
+                            <div><span id="mytime">1</span>秒后跳转到<a href="<%=basePath%>${url}">首页</a>！</div>
                         </div>
                         <script type="text/javascript">
                             $(function () {
-                                var time = 2;
+                                var time = 0;
                                 var intervalFn = setInterval(function () {
                                     if (time< 1) {
                                         clearInterval(intervalFn);
@@ -43,7 +43,7 @@
                                     }
                                     $("#mytime").text(time);
                                     time--;
-                                }, 1000)
+                                }, 1000);
                             });
                         </script>
                     </div>

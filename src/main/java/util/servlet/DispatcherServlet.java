@@ -39,8 +39,8 @@ public abstract class DispatcherServlet extends HttpServlet {
     protected Integer currentPage = 1;
     protected Integer lineSize = 10;
     protected String keyWord = "";
-    protected String column = "eid";
-    protected String selectItems = null;
+    protected String column = "";
+    protected String columnData = null;
 
     public void init() throws ServletException {
 
@@ -53,22 +53,20 @@ public abstract class DispatcherServlet extends HttpServlet {
     ;
 
     public void handleSplit(String url) {
-        try {
-            this.currentPage = Integer.parseInt(this.request.getParameter("currentPage"));
-        } catch (Exception e) {
-        }
-        try {
-            this.lineSize = Integer.parseInt(this.request.getParameter("lineSize"));
-        } catch (Exception e) {
-        }
-        this.column = request.getParameter("column") == null ? column : request.getParameter("column");
-        this.keyWord = request.getParameter("keyWord") == null ? keyWord : request.getParameter("keyWord");
+        String cp = request.getParameter("currentPage");
+        String ls = request.getParameter("lineSize");
+        String kw = request.getParameter("keyWord");
+        String co = request.getParameter("column");
+        this.currentPage = cp == null || "".equals(cp) ? currentPage : Integer.parseInt(cp);
+        this.lineSize = ls == null || "".equals(ls) ? lineSize : Integer.parseInt(ls);
+        this.keyWord = kw == null || "".equals(kw) ? keyWord : kw;
+        this.column = co == null || "".equals(co) ? column : co;
         this.request.setAttribute("currentPage", this.currentPage);
         this.request.setAttribute("lineSize", this.lineSize);
         this.request.setAttribute("column", this.column);
         this.request.setAttribute("keyWord", this.keyWord);
         this.request.setAttribute("url", getPath(url));
-        this.request.setAttribute("selectItems", selectItems);
+        this.request.setAttribute("columnData", columnData);
 
     }
 
@@ -146,7 +144,12 @@ public abstract class DispatcherServlet extends HttpServlet {
                 try { // 只有将对应的数据都准备完毕了，才可以执行以下方法
                     Method method = this.getClass().getDeclaredMethod(status);
                     method.setAccessible(true);//取消方法封装
-                    path = this.getPath((String) method.invoke(this));// 反射调用方法
+                    if (method.getGenericReturnType().toString().equals("void")) {//判断方法返回值是否为void,如果是，执行方法，然后结束
+                        method.invoke(this);
+                        return;
+                    } else {
+                        path = this.getPath((String) method.invoke(this));// 反射调用方法
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -306,9 +309,6 @@ public abstract class DispatcherServlet extends HttpServlet {
         return all;
     }
 
-    public SmartUpload getSmart() {
-        return this.smart;
-    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)

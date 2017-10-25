@@ -61,17 +61,17 @@
             </c:if>
 
             <c:if test="${res3==1}">
-                <li class="${param.role=='emp' ? 'active' : ''} treeview"><a href="<%=basePath%>pages/index.jsp"> <i
-                        class="fa  fa-folder-open"></i>
+                <li class="${param.role=='emp' ? 'active' : ''} treeview"><a href="<%=basePath%>pages/index.jsp"> <i class="fa  fa-folder-open"></i>
                     <span>雇员管理</span> <i class="fa fa-angle-left pull-right"></i>
                 </a>
                     <ul class="treeview-menu">
-                        <li class="${param.action=='emp:add' ? 'active' : ''}"><a href="pages/back/emp/emp_add.jsp"><i
+                        <li class="${param.action=='emp:add' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/addPre"><i
                                 class="fa fa-circle-o"></i> 雇员入职</a></li>
-                        <li class="${param.action=='emp:list' ? 'active' : ''}"><a href="pages/back/emp/emp_list.jsp"><i
-                                class="fa fa-circle-o"></i> 雇员列表</a></li>
-                    </ul>
-                </li>
+                        <li class="${param.action=='emp:list' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/list?flag=1"><i
+                                class="fa fa-circle-o"></i> 在职雇员列表</a></li>
+                        <li class="${param.action=='emp:listOut' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/list?flag=0"><i
+                                class="fa fa-circle-o"></i> 离职雇员列表</a></li>
+                    </ul></li>
             </c:if>
 
         </ul>

@@ -151,6 +151,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
                     setMethod.invoke(vo, res.getDouble(x + 1));
                     break;
 
+
             }
         }
     }
@@ -292,9 +293,10 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
         return 0;
     }
 
-    /**
-     * 要制定状态的分页方法
-     * @param status
+    /**按照某个标记列分页列表
+     *
+     * @param flagColumn 表中标记列的名字
+     * @param value 标记列的值
      * @param currentPage
      * @param lineSize
      * @param column
@@ -302,11 +304,11 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
      * @return
      * @throws Exception
      */
-    public List<V> findAllSplitByStatus(Integer status, Integer currentPage, Integer lineSize, String column, String keyWord) throws Exception {
+    public List<V> findAllSplitByFlag(String flagColumn,Integer value, Integer currentPage, Integer lineSize, String column, String keyWord) throws Exception {
         List<V> list = new ArrayList<>();
         buf.setLength(0);
         bufSelectAll();
-        buf.append(" where status=" + status + " and " + column + " like ? limit " + (currentPage - 1) * lineSize + "," + lineSize);
+        buf.append(" where "+flagColumn+"=" + value + " and " + column + " like ? limit " + (currentPage - 1) * lineSize + "," + lineSize);
         pre = conn.prepareStatement(buf.toString());
         pre.setString(1, "%" + keyWord + "%");
         res = pre.executeQuery();
@@ -320,16 +322,17 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
     }
 
     /**
-     * 获得全部数据条数，有状态要求的
-     * @param status
+     *
+     * @param flagColumn 按照某个标记列分页时的总记录数
+     * @param value    标记列的值
      * @param column
      * @param keyWord
      * @return
      * @throws Exception
      */
-    public Integer getAllCountByStatus(Integer status, String column, String keyWord) throws Exception {
+    public Integer getAllCountByFlag(String flagColumn,Integer value, String column, String keyWord) throws Exception {
         buf.setLength(0);
-        buf.append("select count(*) from " + tableName + " where status=" + status + " and " + column + " like ?");
+        buf.append("select count(*) from " + tableName + " where "+flagColumn+"=" + value + " and " + column + " like ?");
         pre = conn.prepareStatement(buf.toString());
         pre.setString(1, "%" + keyWord + "%");
         res = pre.executeQuery();
