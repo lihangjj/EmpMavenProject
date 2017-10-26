@@ -1,7 +1,6 @@
 package dao;
 
 
-
 import dbc.DatabaseConnection;
 
 import java.lang.reflect.Field;
@@ -11,7 +10,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
+public class AbstractDAOImpl<K, V> implements IDAO<K, V> {
     protected Connection conn;     // protected 修饰所有本类成员目的是方便子类使用
     protected PreparedStatement pre;
     protected ResultSet res;
@@ -34,9 +33,17 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
             // 将需要的VO成员添加到List集合，以便其他方法使用。
         }
     }
-    {
 
+    public int getLastInsertId() throws Exception {
+        sql = "select LAST_INSERT_ID()";
+        pre = conn.prepareStatement(sql);
+        res = pre.executeQuery();
+        while (res.next()) {
+            return res.getInt(1);
+        }
+        return -1;
     }
+
 
     public Set<String> photoHandle(String table, String photoColumn,
                                    String column, Set<?> ids) throws SQLException {
@@ -106,6 +113,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
 
     /**
      * 首字母大写的方法，比较高大上的办法
+     *
      * @param name
      * @return
      */
@@ -117,6 +125,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
 
     /**
      * 查询全部数据
+     *
      * @return
      * @throws Exception
      */
@@ -158,6 +167,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
 
     /**
      * 数据更新操作
+     *
      * @param vo 包含了要修改数据的信息，一定要提供有ID内容
      * @return
      * @throws Exception
@@ -208,7 +218,6 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
     }
 
     /**
-     *
      * @param id 要查询的对象编号
      * @return
      * @throws Exception
@@ -249,6 +258,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
 
     /**
      * 分页查询全部数据
+     *
      * @param currentPage 当前所在的页
      * @param lineSize    每有莪显示数据行数
      * @param column      要进行模糊查询的数据列
@@ -275,6 +285,7 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
 
     /**
      * 得到全部分页数据总数
+     *
      * @param column  要进行模糊查询的数据列
      * @param keyWord 模糊查询的关键字
      * @return
@@ -293,10 +304,11 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
         return 0;
     }
 
-    /**按照某个标记列分页列表
+    /**
+     * 按照某个标记列分页列表
      *
-     * @param flagColumn 表中标记列的名字
-     * @param value 标记列的值
+     * @param flagColumn  表中标记列的名字
+     * @param value       标记列的值
      * @param currentPage
      * @param lineSize
      * @param column
@@ -304,11 +316,11 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
      * @return
      * @throws Exception
      */
-    public List<V> findAllSplitByFlag(String flagColumn,Integer value, Integer currentPage, Integer lineSize, String column, String keyWord) throws Exception {
+    public List<V> findAllSplitByFlag(String flagColumn, Integer value, Integer currentPage, Integer lineSize, String column, String keyWord) throws Exception {
         List<V> list = new ArrayList<>();
         buf.setLength(0);
         bufSelectAll();
-        buf.append(" where "+flagColumn+"=" + value + " and " + column + " like ? limit " + (currentPage - 1) * lineSize + "," + lineSize);
+        buf.append(" where " + flagColumn + "=" + value + " and " + column + " like ? limit " + (currentPage - 1) * lineSize + "," + lineSize);
         pre = conn.prepareStatement(buf.toString());
         pre.setString(1, "%" + keyWord + "%");
         res = pre.executeQuery();
@@ -322,17 +334,16 @@ public abstract class AbstractDAOImpl<K, V> implements IDAO<K, V> {
     }
 
     /**
-     *
      * @param flagColumn 按照某个标记列分页时的总记录数
-     * @param value    标记列的值
+     * @param value      标记列的值
      * @param column
      * @param keyWord
      * @return
      * @throws Exception
      */
-    public Integer getAllCountByFlag(String flagColumn,Integer value, String column, String keyWord) throws Exception {
+    public Integer getAllCountByFlag(String flagColumn, Integer value, String column, String keyWord) throws Exception {
         buf.setLength(0);
-        buf.append("select count(*) from " + tableName + " where "+flagColumn+"=" + value + " and " + column + " like ?");
+        buf.append("select count(*) from " + tableName + " where " + flagColumn + "=" + value + " and " + column + " like ?");
         pre = conn.prepareStatement(buf.toString());
         pre.setString(1, "%" + keyWord + "%");
         res = pre.executeQuery();

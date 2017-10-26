@@ -30,14 +30,14 @@ public abstract class DispatcherServlet extends HttpServlet {
     protected String title = "";
     private static final String PAGES_BASENAME = "Pages";
     private static final String MESSAGES_BASENAME = "Messages";
-
+    protected Object vo;
     private ResourceBundle pagesResource;
     private ResourceBundle messagesResource;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
 
     protected Integer currentPage = 1;
-    protected Integer lineSize = 10;
+    protected Integer lineSize = 5;
     protected String keyWord = "";
     protected String column = "";
     protected String columnData = null;
@@ -59,7 +59,7 @@ public abstract class DispatcherServlet extends HttpServlet {
         String co = request.getParameter("column");
         this.currentPage = cp == null || "".equals(cp) ? currentPage : Integer.parseInt(cp);
         this.lineSize = ls == null || "".equals(ls) ? lineSize : Integer.parseInt(ls);
-        this.keyWord = kw == null || "".equals(kw) ? keyWord : kw;
+        this.keyWord = kw == null || "".equals(kw) ? "" : kw;
         this.column = co == null || "".equals(co) ? column : co;
         this.request.setAttribute("currentPage", this.currentPage);
         this.request.setAttribute("lineSize", this.lineSize);
@@ -70,14 +70,6 @@ public abstract class DispatcherServlet extends HttpServlet {
 
     }
 
-    public boolean checkCode() {
-        String code = this.request.getParameter("code");
-        String rand = (String) this.request.getSession().getAttribute("rand");
-        if (code == null || rand == null) {
-            return false;
-        }
-        return rand.equalsIgnoreCase(code);
-    }
 
     /**
      * 取得在Pages.properties文件里面定义的访问路径
@@ -115,12 +107,10 @@ public abstract class DispatcherServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         this.request = request;
         this.response = response;
-        referer = request.getHeader("referer");
-        if (referer != null) {
-            referer = referer.substring(17);
-        }
+
         String path = this.getPath("errors.page");
         String status = getStatus();
+        System.out.println(request.getContentType());
         if (request.getContentType() != null) {
             if (request.getContentType().contains("multipart/form-data")) {
                 this.smart = new SmartUpload();
@@ -283,7 +273,7 @@ public abstract class DispatcherServlet extends HttpServlet {
      * @return
      */
     public String createSingleFileName() {
-        String fileName = "nophoto.jpg";
+        String fileName = "nophoto.png";
         if (this.isUpload()) {
             if (this.smart.getFiles().getFile(0).getContentType()
                     .contains("image")) {
@@ -318,12 +308,11 @@ public abstract class DispatcherServlet extends HttpServlet {
 
     public void handleRequest() {
         if (request.getContentType() != null) {
-            String s = request.getContentType();
-            System.out.println(s);
             // 当前使用了表单封装，意味着是有文件上传，应该使用SmartUpload接收数据
             if (request.getContentType().contains("multipart/form-data")) {
                 // 取得全部的请求参数名称，之所以需要名称，主要是确定自动赋值的操作
                 Enumeration<String> enu = this.smart.getRequest().getParameterNames();
+
                 while (enu.hasMoreElements()) { // 循环所有的参数名称
                     String paramName = enu.nextElement();
                     if (paramName.contains(".")) { // 按照简单Java类处理
@@ -501,7 +490,6 @@ public abstract class DispatcherServlet extends HttpServlet {
                         }
                         switch (objectMap.get(nameValue.length - 2).getClass().getDeclaredField(nameValue[nameValue.length - 1]).getType().getSimpleName()) {//根据成员类型对VO的成员设置值
                             case "String":
-                                System.out.println(setMethodMap.get(nameValue.length - 2).getName() + "方法名字+操作的vo对象" + vo2 + "对象值：" + values[x]);
                                 setMethodMap.get(nameValue.length - 2).invoke(vo2, values[x]);
                                 break;
                             case "Integer":

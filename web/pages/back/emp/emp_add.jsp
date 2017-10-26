@@ -83,7 +83,6 @@
 											<div class="col-md-5">
 												<input type="text" name="emp.comm" id="emp.comm" class="form-control input-sm" placeholder="如果为销售人员，设置每月佣金">
 											</div>
-											<input type="text" id="comm" name="comm">输入
 											<div class="col-md-4" id="emp.commMsg"></div>
 										</div>
 										<div class="form-group" id="emp.photoDiv">

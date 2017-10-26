@@ -3,6 +3,6 @@ $(function() {
 		checkboxSelectAll("empno",this.checked) ;
 	}) ;
 	$(outBtn).on("click",function(){
-		operateChecked("empno","/pages/back/emp") ;
+		operateChecked("empno","/pages/back/emp/EmpServletBack/leave") ;
 	}) ;
-})
+});

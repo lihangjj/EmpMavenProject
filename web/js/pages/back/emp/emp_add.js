@@ -42,11 +42,10 @@ $(function () {
             $("#" + id).append("<span class='text-success glyphicon glyphicon-ok'></span>");
         },
         messages : {
-            "emp.deptno" : "该部门人员已经满员，无法进行雇员入职操作！" ,
             "emp.sal" : "该工资与雇员等级不匹配，请重新调整！"
         },
         rules: {	// 针对于每一个表单实现的验证控制处理
-            "emp.name": {
+            "emp.ename": {
                 required: true
             },
             "emp.deptno": {

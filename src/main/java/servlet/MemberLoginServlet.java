@@ -10,7 +10,6 @@ import vo.Member;
 import vo.Role;
 
 import javax.servlet.annotation.WebServlet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,11 +42,6 @@ public class MemberLoginServlet extends DispatcherServlet {
                 request.getSession().setAttribute("allRoles", allRoles);
                 request.getSession().setAttribute("allActions", allActions);
                 request.getSession().setAttribute("actionFlagSet", actionFlagSet);
-                System.out.println(allRoles);
-                Iterator<Action> iterator=allActions.iterator();
-                while (iterator.hasNext()){
-                    System.out.println(iterator.next().toString());
-                }
                 setMsgAndUrl("login.success.msg", "index.page");
             } else {
                 setMsgAndUrl("login.failure.msg", "login.page");
