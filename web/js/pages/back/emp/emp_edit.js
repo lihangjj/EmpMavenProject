@@ -42,7 +42,7 @@ $(function() {
 			$("#" + id).append("<span class='text-success glyphicon glyphicon-ok'></span>") ; 
 		}  ,
 		rules : {	// 针对于每一个表单实现的验证控制处理
-			"emp.name" : {
+			"emp.ename" : {
 				required : true 
 			} ,
 			"emp.deptno" : {

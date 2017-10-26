@@ -29,4 +29,13 @@ public class Action implements Serializable {
     public void setActid(Integer actid) {
         this.actid = actid;
     }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "title='" + title + '\'' +
+                ", flag='" + flag + '\'' +
+                ", actid=" + actid +
+                '}';
+    }
 }

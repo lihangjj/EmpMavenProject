@@ -7,11 +7,10 @@
           <element id="module-output" name="EmpMavenProject" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="kaptcha-0.0.9" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.17" />
           <element id="library" level="project" name="SmartUpload" />
           <element id="library" level="project" name="jstl" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.17" />
-          <element id="library" level="project" name="kaptcha-0.0.9" />
-          <element id="library" level="project" name="jstl1" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="EmpMavenProject/web/Web" />

@@ -10,10 +10,7 @@ import vo.Action;
 import vo.Member;
 import vo.Role;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MemberServiceBackImpl extends AbstractService implements IMemberServiceBack {
     @Override
@@ -25,12 +22,18 @@ public class MemberServiceBackImpl extends AbstractService implements IMemberSer
             if (vo.getPassword().equals(ckVo.getPassword())) {
                 Set<Role> allRoles = DAOFactory.getInstance(RoleDAOImpl.class).findByMid(ckVo.getMid());
                 Set<Action> allActions = DAOFactory.getInstance(ActionDAOImpl.class).findByMid(ckVo.getMid());
+                Iterator<Action> iterator = allActions.iterator();
+                Set<String> actionFlagSet = new HashSet<>();
+                while (iterator.hasNext()) {
+                    actionFlagSet.add(iterator.next().getFlag());
+                }
                 map.put("flag", true);
                 map.put("mid", ckVo.getMid());
                 map.put("name", ckVo.getName());
                 map.put("sflag", ckVo.getSflag());
-                map.put("allRoles",allRoles);
-                map.put("allActions",allActions);
+                map.put("allRoles", allRoles);
+                map.put("allActions", allActions);
+                map.put("actionFlagSet", actionFlagSet);//保存权限标记为set集合
             } else {
                 map.put("flag", false);
             }

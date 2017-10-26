@@ -29,8 +29,22 @@ function operateChecked(elename,url) {
         }) ;
 	} else {
 		if (window.confirm("您确定要继续执行此操作吗？")) {
-			url += "?ids=" + ids ;
-			window.location = url ;
+			$.post(url,{
+				ids:ids
+			},function (data) {
+					if(data=="true"){
+						var id=ids.split("\|");
+                        $("#alertText").text("雇员批量离职成功！") ;
+                        $("#alertDiv").fadeIn(1000,function(){
+                            $("#alertDiv").fadeOut(3000) ;
+                        }) ;
+						for (var x=0;x<id.length;x++){
+                            $("#"+id[x]).remove();
+                        }
+					}
+
+
+            },"text");
 		}
 	}
 }

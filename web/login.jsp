@@ -36,14 +36,14 @@
 									<div class="col-md-12">
 										<!-- 定义表单输入组件 -->
 										<input type="text" id="member.mid" name="member.mid" class="form-control"
-											placeholder="请输入登录帐号">
+											placeholder="请输入登录帐号" value="mldn">
 									</div>
 								</div>
 								<div class="form-group" id="member.passwordDiv">
 									<div class="col-md-12">
 										<!-- 定义表单输入组件 -->
 										<input type="password" id="member.password" name="member.password" class="form-control"
-											placeholder="请输入登录密码...">
+											placeholder="请输入登录密码..." value="java">
 									</div>
 								</div>
 								<div class="form-group" id="codeDiv">
