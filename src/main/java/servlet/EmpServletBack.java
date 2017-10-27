@@ -12,10 +12,10 @@ import java.util.Map;
 
 @WebServlet(name = "EmpServletBack", urlPatterns = "/pages/back/emp/EmpServletBack/*")
 public class EmpServletBack extends EmpServlet {
-    Emp emp = new Emp();
+    public Emp emp = new Emp();
 
     public Emp getEmp() {
-        return emp;
+        return this.emp;
     }
 
     String add() {
@@ -154,7 +154,7 @@ public class EmpServletBack extends EmpServlet {
             try {
                 if (empServiceBack.edit(emp,note)) {
                     setMsgAndUrl("vo.edit.success.msg", "EmpServletBack.list.onduty");
-                    emp=null;
+                    //我真fuck
                 } else {
                     setMsgAndUrl("vo.edit.failure.msg", "EmpServletBack.list.onduty");
                 }
