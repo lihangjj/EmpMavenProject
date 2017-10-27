@@ -15,12 +15,12 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Date;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static dao.AbstractDAOImpl.initCap;
 
 public abstract class DispatcherServlet extends HttpServlet {
 
@@ -50,7 +50,6 @@ public abstract class DispatcherServlet extends HttpServlet {
                 Locale.getDefault());
     }
 
-    ;
 
     public void handleSplit(String url) {
         String cp = request.getParameter("currentPage");
@@ -111,6 +110,8 @@ public abstract class DispatcherServlet extends HttpServlet {
         String path = this.getPath("errors.page");
         String status = getStatus();
         System.out.println(request.getContentType());
+
+        // 现在可以找到当前类对象this，以及要调用的方法名称status，那么可以利用反射进行调用
         if (request.getContentType() != null) {
             if (request.getContentType().contains("multipart/form-data")) {
                 this.smart = new SmartUpload();
@@ -123,14 +124,13 @@ public abstract class DispatcherServlet extends HttpServlet {
                 }
             }
         }
-        // 现在可以找到当前类对象this，以及要调用的方法名称status，那么可以利用反射进行调用
-        Map<String, Object> errorsMap = new HashMap<>();
+
 
         if (status != null && status.length() > 0) {
             // 在进行参数的处理之前，需要对提交数据进行验证
             Map<String, String> errors = ValidateParameter.validate(this);
             if (errors.size() == 0) { // 没有错误
-                this.handleRequest();// 处理参数与简单Java类之间的自动赋值
+
                 try { // 只有将对应的数据都准备完毕了，才可以执行以下方法
                     Method method = this.getClass().getDeclaredMethod(status);
                     method.setAccessible(true);//取消方法封装
@@ -138,6 +138,9 @@ public abstract class DispatcherServlet extends HttpServlet {
                         method.invoke(this);
                         return;
                     } else {
+                        //先清空vo的值，不然会影响其他操作
+//                        handleRequest();
+                        autoVoSet();
                         path = this.getPath((String) method.invoke(this));// 反射调用方法
                     }
                 } catch (Exception e) {
@@ -148,6 +151,115 @@ public abstract class DispatcherServlet extends HttpServlet {
             }
         }
         request.getRequestDispatcher(path).forward(request, response);
+    }
+
+    public void autoVoSet() throws Exception {
+        Object voClass;
+        Field vo = this.getClass().getDeclaredFields()[0];
+        voClass = vo.get(this);
+        Field[] allFiled = voClass.getClass().getDeclaredFields();//得到vo类的全部成员
+        Integer m = null;//null要赋值个一个变量才能用
+        for (Field x : allFiled) {//先把已经有的值全部清空
+            Method setMethod = voClass.getClass().getDeclaredMethod("set" + initCap(x.getName()), x.getType());
+            switch (x.getType().getSimpleName()) {
+                case "String":
+                    //讲真，真变态，直接设置为null还是不行，我靠
+                    setMethod.invoke(voClass, m);//全部清空
+                    break;
+                case "Double":
+                    setMethod.invoke(voClass, m);//全部清空
+
+                    break;
+                case "Integer":
+                    setMethod.invoke(voClass, m);//全部清空
+                    break;
+                case "Date":
+                    setMethod.invoke(voClass, m);
+                    break;
+            }
+        }
+        if (request.getContentType() != null) {//看是不是有上传的表单
+            if (request.getContentType().contains("multipart/form-data")) {
+                Enumeration<String> allParameters = this.smart.getRequest().getParameterNames();
+                while (allParameters.hasMoreElements()) {
+                    String parameterClassAndFiled = allParameters.nextElement();
+                    System.out.println(parameterClassAndFiled);
+                    if (parameterClassAndFiled.contains(".")) {
+                        String[] classAndFiled = parameterClassAndFiled.split("\\.");
+                        if (classAndFiled.length == 2) {
+                            String fieldName = classAndFiled[1];
+                            //现在开始给VO赋值;
+                            //1.取得当前要设置值的成员
+                            Field field = voClass.getClass().getDeclaredField(fieldName);
+                            Method voSet = voClass.getClass().getDeclaredMethod("set" + initCap(fieldName), field.getType());
+                            String value = smart.getRequest().getParameter(parameterClassAndFiled);
+                            switchFieldType(voClass, field, voSet, value);
+                        } else {//此处是三级以上vo操作
+
+                        }
+                    }
+                }
+            } else {
+                Enumeration<String> allParameters = request.getParameterNames();
+                voSet(voClass, allParameters);
+            }
+        } else {
+            Enumeration<String> allParameters = request.getParameterNames();
+            voSet(voClass, allParameters);
+        }
+
+    }
+
+    private void voSet(Object voClass, Enumeration<String> allParameters) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        while (allParameters.hasMoreElements()) {
+            String parameterClassAndFiled = allParameters.nextElement();
+            if (parameterClassAndFiled.contains(".")) {
+                String[] classAndFiled = parameterClassAndFiled.split("\\.");
+                if (classAndFiled.length == 2) {
+                    String fieldName = classAndFiled[1];
+                    //现在开始给VO赋值;
+                    //1.取得当前要设置值的成员
+                    Field field = voClass.getClass().getDeclaredField(fieldName);
+                    Method voSet = voClass.getClass().getDeclaredMethod("set" + initCap(fieldName), field.getType());
+                    String value = request.getParameter(parameterClassAndFiled);
+                    switchFieldType(voClass, field, voSet, value);
+                } else {//此处是三级vo操作
+
+                }
+
+            }
+
+        }
+    }
+
+    private void switchFieldType(Object voClass, Field field, Method voSet, String value) throws IllegalAccessException, InvocationTargetException {
+
+        switch (field.getType().getSimpleName()) {
+            case "String":
+                voSet.invoke(voClass, value);
+                break;
+            case "Double":
+                if (value.matches("\\d+(\\.\\d+)?")) {
+                    voSet.invoke(voClass, Double.parseDouble(value));
+                }
+                break;
+            case "Integer":
+                if (value.matches("\\d+")) {
+                    voSet.invoke(voClass, Integer.parseInt(value));
+                }
+                break;
+            case "Date":
+                if (value.matches("\\d{4}-\\d{2}-\\d{2}") || value.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+                    voSet.invoke(voClass, Date.valueOf(value));
+                }
+                break;
+        }
+    }
+
+    public static String initCap(String name) {
+        char[] cs = name.toCharArray();
+        cs[0] -= 32;
+        return String.valueOf(cs);
     }
 
     /**
@@ -310,12 +422,13 @@ public abstract class DispatcherServlet extends HttpServlet {
         if (request.getContentType() != null) {
             // 当前使用了表单封装，意味着是有文件上传，应该使用SmartUpload接收数据
             if (request.getContentType().contains("multipart/form-data")) {
-                // 取得全部的请求参数名称，之所以需要名称，主要是确定自动赋值的操作
+
                 Enumeration<String> enu = this.smart.getRequest().getParameterNames();
 
                 while (enu.hasMoreElements()) { // 循环所有的参数名称
                     String paramName = enu.nextElement();
                     if (paramName.contains(".")) { // 按照简单Java类处理
+
                         AttributeType at = new AttributeType(this, paramName);
                         if (at.getFiledType().contains("[]")) { // 按照数组的方式进行处理
                             BeanOperate bo = new BeanOperate(this, paramName,
@@ -385,7 +498,7 @@ public abstract class DispatcherServlet extends HttpServlet {
         Map<Integer, Object> allVo2 = new HashMap<>();
         Map<String, Object> isExistVo = new HashMap<>();
         Class currentClass = this.getClass();
-        Object currentObject = this;
+        Object voClass = this;
         boolean flag = true;
         while (enumeration.hasMoreElements()) {
             String parameterName = enumeration.nextElement();
@@ -396,8 +509,8 @@ public abstract class DispatcherServlet extends HttpServlet {
                         //利用当前类的Class对象取得getVo方法
                         Method getVoMethod = currentClass.getDeclaredMethod("get" + initCap(nameValue[x]));
                         //用get方法获取已经实例化了的成员对象（vo类）
-                        Object o = getVoMethod.invoke(currentObject);
-                        currentObject = o;
+                        Object o = getVoMethod.invoke(voClass);
+                        voClass = o;
                         //获得vo类对象的Class对象
                         currentClass = o.getClass();
                     }
@@ -445,11 +558,11 @@ public abstract class DispatcherServlet extends HttpServlet {
                     for (int x = 0; x < nameValue.length - 1; x++) {
                         //利用当前类的Class对象取得getVo方法
 //                        Method getVo1 = currentClass.getDeclaredMethod("get" + initCap(nameValue[x]));
-//                        Object vo1 = getVo1.invoke(currentObject);
+//                        Object vo1 = getVo1.invoke(voClass);
 //                        Method setVo1 = vo1.getClass().getDeclaredMethod("set" + initCap(nameValue[x + 1]), vo1.getClass().getDeclaredField(nameValue[x + 1]).getType());
 //
 //                        currentClass = vo1.getClass();
-//                        currentObject = vo1;
+//                        voClass = vo1;
 //
 //                        Method getVo2 = vo1.getClass().getDeclaredMethod("get" + initCap(nameValue[x + 1]));
 //                        Object vo2 = getVo2.invoke(vo1);
@@ -459,13 +572,13 @@ public abstract class DispatcherServlet extends HttpServlet {
 //                        setVo2.invoke(vo2, 2);
 
                         Method getVo = currentClass.getDeclaredMethod("get" + initCap(nameValue[x]));
-                        Object vo = getVo.invoke(currentObject);
+                        Object vo = getVo.invoke(voClass);
                         Method setVo = vo.getClass().getDeclaredMethod("set" + initCap(nameValue[x + 1]), vo.getClass().getDeclaredField(nameValue[x + 1]).getType());
                         objectMap.put(x, vo);
                         setMethodMap.put(x, setVo);
                         getMethodMap.put(x, getVo);
                         currentClass = vo.getClass();
-                        currentObject = vo;
+                        voClass = vo;
                     }
                     currentClass = objectMap.get(0).getClass();
                     for (int x = 0; x < nameValue.length - 2; x++) {
@@ -513,7 +626,7 @@ public abstract class DispatcherServlet extends HttpServlet {
 
                 }
                 currentClass = this.getClass();
-                currentObject = this;
+                voClass = this;
             }
 
         }

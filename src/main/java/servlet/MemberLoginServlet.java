@@ -17,9 +17,6 @@ import java.util.Set;
 public class MemberLoginServlet extends DispatcherServlet {
     Member member = new Member();
 
-    public Member getMember() {
-        return member;
-    }
 
     String login() {
         try {
@@ -59,7 +56,6 @@ public class MemberLoginServlet extends DispatcherServlet {
         setMsgAndUrl("logout.success.msg", "login.page");
         return forwardPath;
     }
-
     @Override
     public String getUploadDirectory() {
         return null;

@@ -10,8 +10,6 @@ import java.util.Set;
 
 @WebServlet(name = "EmpServlet")
 public class EmpServlet extends DispatcherServlet {
-
-
     protected IEmpServiceBack empServiceBack = ServiceFactory.getInstance(EmpServiceBackImpl.class);
 
     boolean verifyPermission(String actionFlag) {//验证登陆用户是否有该权限

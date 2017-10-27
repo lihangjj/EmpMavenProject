@@ -12,11 +12,8 @@ import java.util.Map;
 
 @WebServlet(name = "EmpServletBack", urlPatterns = "/pages/back/emp/EmpServletBack/*")
 public class EmpServletBack extends EmpServlet {
-    Emp emp = new Emp();
+    public Emp emp = new Emp();
 
-    public Emp getEmp() {
-        return emp;
-    }
 
     String add() {
         System.out.println(emp);
@@ -24,6 +21,8 @@ public class EmpServletBack extends EmpServlet {
         emp.setHiredate(new Date());
         emp.setFlag(1);//刚入职,是在职
         String photoName = createSingleFileName();
+        String s=smart.getRequest().getParameter("emp.lid");
+        String s1=request.getParameter("emp.lid");
         emp.setPhoto(photoName);
         if (verifyPermission("emp:add")) {
             title = "员工";
@@ -154,7 +153,6 @@ public class EmpServletBack extends EmpServlet {
             try {
                 if (empServiceBack.edit(emp,note)) {
                     setMsgAndUrl("vo.edit.success.msg", "EmpServletBack.list.onduty");
-                    emp=null;
                 } else {
                     setMsgAndUrl("vo.edit.failure.msg", "EmpServletBack.list.onduty");
                 }
