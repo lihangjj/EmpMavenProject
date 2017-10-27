@@ -7,6 +7,18 @@ public class Level implements Serializable {
     private Integer lid;
     private Double losal,hisal;
 
+    @Override
+    public String toString() {
+        return "Level{" +
+                "title='" + title + '\'' +
+                ", flag='" + flag + '\'' +
+                ", lid=" + lid +
+                ", losal=" + losal +
+                ", hisal=" + hisal +
+                ", role=" + role +
+                '}';
+    }
+
     public String getTitle() {
         return title;
     }
@@ -45,5 +57,15 @@ public class Level implements Serializable {
 
     public void setHisal(Double hisal) {
         this.hisal = hisal;
+    }
+
+    private Role role=new Role();
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

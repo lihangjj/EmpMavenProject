@@ -5,7 +5,30 @@ import java.util.Date;
 
 public class Emp implements Serializable {
     private String mid,ename,job,photo;
-    private Integer empno,deptno,lid,flag;
+    private Integer empno;
+
+    @Override
+    public String toString() {
+        return "Emp{" +
+                "mid='" + mid + '\'' +
+                ", ename='" + ename + '\'' +
+                ", job='" + job + '\'' +
+                ", photo='" + photo + '\'' +
+                ", empno=" + empno +
+                ", deptno=" + deptno +
+                ", lid=" + lid +
+                ", flag=" + flag +
+                ", sal=" + sal +
+                ", comm=" + comm +
+                ", hiredate=" + hiredate +
+                ", dept=" + dept +
+                ", level=" + level +
+                '}';
+    }
+
+    private Integer deptno;
+    private Integer lid;
+    private Integer flag;
     private Double sal,comm;
     private Date hiredate;
 
@@ -76,6 +99,24 @@ public class Emp implements Serializable {
     public Double getSal() {
         return sal;
     }
+    private Dept dept=new Dept();
+    private Level level=new Level();
+
+    public Dept getDept() {
+        return dept;
+    }
+
+    public void setDept(Dept dept) {
+        this.dept = dept;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
 
     public void setSal(Double sal) {
         this.sal = sal;
@@ -97,20 +138,4 @@ public class Emp implements Serializable {
         this.hiredate = hiredate;
     }
 
-    @Override
-    public String toString() {
-        return "Emp{" +
-                "mid='" + mid + '\'' +
-                ", ename='" + ename + '\'' +
-                ", job='" + job + '\'' +
-                ", photo='" + photo + '\'' +
-                ", empno=" + empno +
-                ", deptno=" + deptno +
-                ", lid=" + lid +
-                ", flag=" + flag +
-                ", sal=" + sal +
-                ", comm=" + comm +
-                ", hiredate=" + hiredate +
-                '}';
-    }
 }

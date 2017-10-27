@@ -10,6 +10,15 @@ public class Role implements Serializable{
         return title;
     }
 
+    @Override
+    public String toString() {
+        return "Role{" +
+                "title='" + title + '\'' +
+                ", flag='" + flag + '\'' +
+                ", rid=" + rid +
+                '}';
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

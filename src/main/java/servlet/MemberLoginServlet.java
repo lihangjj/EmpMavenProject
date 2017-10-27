@@ -15,7 +15,7 @@ import java.util.Set;
 
 @WebServlet(name = "MemberLoginServlet", urlPatterns = "/MemberLoginServlet/*")
 public class MemberLoginServlet extends DispatcherServlet {
-    Member member = new Member();
+    public Member member = new Member();
 
 
     String login() {

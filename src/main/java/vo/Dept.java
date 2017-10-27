@@ -6,6 +6,16 @@ public class Dept implements Serializable {
     private Integer deptno,maxnum,currnum;
     private String dname;
 
+    @Override
+    public String toString() {
+        return "Dept{" +
+                "deptno=" + deptno +
+                ", maxnum=" + maxnum +
+                ", currnum=" + currnum +
+                ", dname='" + dname + '\'' +
+                '}';
+    }
+
     public Integer getDeptno() {
         return deptno;
     }
