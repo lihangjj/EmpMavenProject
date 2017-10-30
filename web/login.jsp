@@ -36,7 +36,7 @@
 									<div class="col-md-12">
 										<!-- 定义表单输入组件 -->
 										<input type="text" id="member.mid" name="member.mid" class="form-control"
-											placeholder="请输入登录帐号" value="mermaid">
+											placeholder="请输入登录帐号" value="admin">
 									</div>
 								</div>
 								<div class="form-group" id="member.passwordDiv">

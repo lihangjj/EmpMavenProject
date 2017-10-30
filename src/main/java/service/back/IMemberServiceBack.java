@@ -2,11 +2,11 @@ package service.back;
 
 import vo.Member;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IMemberServiceBack {
     /**
-     *
      * @param vo
      * @return 要返回的内容
      * key=flag,value=true|false,表示登陆成功或失败的标记
@@ -17,4 +17,10 @@ public interface IMemberServiceBack {
      * @throws Exception
      */
     Map<String, Object> login(Member vo) throws Exception;
+
+    boolean add(Member vo, String[] rid) throws Exception;
+
+    List<Member> list() throws Exception;
+
+    boolean findById(String mid) throws Exception;
 }

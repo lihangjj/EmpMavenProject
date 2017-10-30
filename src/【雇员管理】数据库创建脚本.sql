@@ -24,7 +24,7 @@ CREATE TABLE role (
 CREATE TABLE member_role (
 	mid					VARCHAR(50),
 	rid 				INT ,
-	CONSTRAINT fk_mid1 FOREIGN KEY(mid) REFERENCES member(mid) ,
+	CONSTRAINT fk_mid1 FOREIGN KEY(mid) REFERENCES member(mid) ON DELETE CASCADE ,
 	CONSTRAINT fk_rid1 FOREIGN KEY(rid) REFERENCES role(rid)
 ) engine = innodb;
 -- 4、权限表

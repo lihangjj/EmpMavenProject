@@ -42,4 +42,21 @@ public class MemberServiceBackImpl extends AbstractService implements IMemberSer
         }
         return map;
     }
+
+    @Override
+    public boolean add(Member vo,String[] rid) throws Exception {
+
+        return DAOFactory.getInstance(MemberDAOImpl.class).add(vo,rid);
+    }
+
+    @Override
+    public List<Member> list() throws Exception {
+        return DAOFactory.getInstance(MemberDAOImpl.class).findAll();
+    }
+
+    @Override
+    public boolean findById(String mid) throws Exception {
+        return DAOFactory.getInstance(MemberDAOImpl.class).findById(mid) != null;
+    }
+
 }
