@@ -40,8 +40,8 @@ public abstract class DispatcherServlet extends HttpServlet {
     protected String columnData = null;
     protected Class lastClass = this.getClass();
     protected Object lastObject = this;
-    protected Method lastSetMethod ;
-    protected Method lastGetMethod ;
+    protected Method lastSetMethod;
+    protected Method lastGetMethod;
 
     public void init() throws ServletException {
 
@@ -142,6 +142,8 @@ public abstract class DispatcherServlet extends HttpServlet {
                     } else {
                         autoSetVo();
                         path = this.getPath((String) method.invoke(this));// 反射调用方法
+                        //调用任何方法之后，清空VO设置了的值，以便下次重新赋值
+                        clearVoValue();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -153,12 +155,26 @@ public abstract class DispatcherServlet extends HttpServlet {
         request.getRequestDispatcher(path).forward(request, response);
     }
 
+    protected void clearVoValue() throws Exception {
+        Object oldVo = this.getClass().getDeclaredFields()[0].get(this);//不要忘记了field.get(this),是得到this类的这个成员
+        Field[] oldVoField = (oldVo.getClass()).getDeclaredFields();
+        for (Field x : oldVoField) {
+            System.out.println(x.getName());
+            Method setMethod = oldVo.getClass().getDeclaredMethod("set" + initCap(x.getName()), x.getType());
+            Integer i = null;
+            //循环清空所有的VO的值
+            setMethod.invoke(oldVo, i);
+        }
+
+    }
+
     public void autoSetVo() throws Exception {
         Enumeration<String> enumeration = smart == null ? request.getParameterNames() : smart.getRequest().getParameterNames();
         //得到当前类的Class对象
-         lastClass = this.getClass();
-         lastObject = this;
+        lastClass = this.getClass();
+        lastObject = this;
         Field lastField = null;
+        //在给vo赋值之前，先把原先的Vo的值全部清空
         while (enumeration.hasMoreElements()) {
             String parameterName = enumeration.nextElement();
             if (parameterName.contains(".")) {//如果包含.说明需要自动赋值

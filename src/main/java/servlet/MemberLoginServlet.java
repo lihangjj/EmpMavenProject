@@ -17,6 +17,9 @@ import java.util.Set;
 public class MemberLoginServlet extends DispatcherServlet {
     public Member member = new Member();
 
+    public Member getMember() {
+        return member;
+    }
 
     String login() {
         try {
@@ -32,7 +35,7 @@ public class MemberLoginServlet extends DispatcherServlet {
                 int sflag = (int) map.get("sflag");
                 Set<Role> allRoles = (Set<Role>) map.get("allRoles");
                 Set<Action> allActions = (Set<Action>) map.get("allActions");
-                Set<String> actionFlagSet= (Set<String>) map.get("actionFlagSet");
+                Set<String> actionFlagSet = (Set<String>) map.get("actionFlagSet");
                 request.getSession().setAttribute("name", name);
                 request.getSession().setAttribute("mid", mid);
                 request.getSession().setAttribute("sflag", sflag);
@@ -56,6 +59,7 @@ public class MemberLoginServlet extends DispatcherServlet {
         setMsgAndUrl("logout.success.msg", "login.page");
         return forwardPath;
     }
+
     @Override
     public String getUploadDirectory() {
         return null;
