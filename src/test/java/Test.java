@@ -1,25 +1,19 @@
-import factory.ServiceFactory;
-import net.sf.json.JSONObject;
-import service.back.IDeptServiceBack;
-import service.back.impl.DeptServiceBackImpl;
-import vo.Emp;
+import util.DateUtil;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class Test {
     public static void main(String[] args) throws Exception {
-        IDeptServiceBack ideptServiceBack= ServiceFactory.getInstance(DeptServiceBackImpl.class);
-        List<Emp> emps= ideptServiceBack.findEmpsByDept(2);
-        Emp emp2=emps.get(0);
-        Emp emp1=new Emp();
-        emp1.setFlag(1);
-        emp1.setMid("jhah");
-        System.out.println(emp1);
-        System.out.println(emp2);
-        JSONObject jsonObject=JSONObject.fromObject(emp1);
-        JSONObject jsonObject2=JSONObject.fromObject(emp2);
-        System.out.println(jsonObject);
-        System.out.println(jsonObject2);
+
+        String s="Mon Oct 30 00:00:00 CST 2017";
+        Date date=DateUtil.getChinaUtilDate(new java.sql.Date(595959));
+
+
+//        System.out.println(Date.valueOf(s));
+        System.out.println(date);
 
     }
 

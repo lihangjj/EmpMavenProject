@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="util.DateUtil" %>
 <%@ include file="/pages/plugins/include_static_head.jsp" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -62,7 +64,8 @@
                                             <td class="text-center">${allDepts[emp.empno].dname}</td>
                                             <td class="text-center">￥${emp.sal}/月</td>
                                             <td class="text-center">￥${emp.comm}/月</td>
-                                            <td class="text-center">${emp.hiredate}</td>
+                                            <td class="text-center">${allDate[emp.empno]}</td>
+
                                             <td class="text-center"><a href="<%=editEmpUrl%>?empno=${emp.empno}"
                                                                        class="btn btn-xs btn-primary"><span
                                                     class="glyphicon glyphicon-edit"></span>&nbsp;编辑</a></td>

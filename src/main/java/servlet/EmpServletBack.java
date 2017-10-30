@@ -1,14 +1,13 @@
 package servlet;
 
+import util.DateUtil;
 import vo.Dept;
 import vo.Emp;
 import vo.Level;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet(name = "EmpServletBack", urlPatterns = "/pages/back/emp/EmpServletBack/*")
 public class EmpServletBack extends EmpServlet {
@@ -28,7 +27,7 @@ public class EmpServletBack extends EmpServlet {
         if (verifyPermission("emp:add")) {
             title = "员工";
             try {
-                if (empServiceBack.insert(emp,smart.getRequest().getParameter("note"))) {
+                if (empServiceBack.insert(emp, smart.getRequest().getParameter("note"))) {
                     save(photoName);
                     setMsgAndUrl("vo.add.success.msg", "EmpServletBack.list.onduty");
                 } else {
@@ -97,6 +96,11 @@ public class EmpServletBack extends EmpServlet {
             try {
                 Map<String, Object> map = empServiceBack.listSplitByFlag(currentPage, lineSize, column, keyWord, flag);
                 List<Emp> allEmps = (List<Emp>) map.get("allEmps");
+                Map<Integer, String> allSimpleDate = new HashMap<>();
+                for (Emp x : allEmps) {
+                    allSimpleDate.put(x.getEmpno(), DateUtil.getSimpleDate(x.getHiredate()));
+                }
+                request.setAttribute("allDate", allSimpleDate);
                 Map<Integer, Level> allLevels = (Map<Integer, Level>) map.get("allLevels");
                 Map<Integer, Dept> allDepts = (Map<Integer, Dept>) map.get("allDepts");
                 request.setAttribute("allLevels", allLevels);
@@ -151,9 +155,9 @@ public class EmpServletBack extends EmpServlet {
                 emp.setPhoto(createSingleFileName());
             }
             System.out.println(emp);
-            String note=smart.getRequest().getParameter("note");
+            String note = smart.getRequest().getParameter("note");
             try {
-                if (empServiceBack.edit(emp,note)) {
+                if (empServiceBack.edit(emp, note)) {
                     setMsgAndUrl("vo.edit.success.msg", "EmpServletBack.list.onduty");
                     //我真fuck
                 } else {

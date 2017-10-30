@@ -3,6 +3,7 @@ package util.servlet;
 
 import com.jspsmart.upload.SmartUpload;
 import com.jspsmart.upload.SmartUploadException;
+import util.DateUtil;
 import util.validate.ValidateParameter;
 
 import javax.servlet.ServletException;
@@ -128,7 +129,6 @@ public abstract class DispatcherServlet extends HttpServlet {
             smart = null;
         }
         // 现在可以找到当前类对象this，以及要调用的方法名称status，那么可以利用反射进行调用
-        Map<String, Object> errorsMap = new HashMap<>();
         if (status != null && status.length() > 0) {
             // 在进行参数的处理之前，需要对提交数据进行验证
             Map<String, String> errors = ValidateParameter.validate(this);
@@ -184,7 +184,8 @@ public abstract class DispatcherServlet extends HttpServlet {
                         break;
                     case "Date":
                         if (!"".equals(value)) {
-                            lastSetMethod.invoke(lastObject, Date.valueOf(value));
+
+                            lastSetMethod.invoke(lastObject, DateUtil.getEglishUtilDate(value));//将英文日期格式转换成util.Date
                         }
                         break;
                     case "Double":

@@ -154,6 +154,7 @@ public class AbstractDAOImpl<K, V> implements IDAO<K, V> {
                     setMethod.invoke(vo, res.getInt(x + 1));
                     break;
                 case "Date":
+
                     setMethod.invoke(vo, new Date(res.getDate(x + 1).getTime()));
                     break;
                 case "Double":

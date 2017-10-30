@@ -5,7 +5,7 @@
 <head>
     <base href="<%=basePath%>">
     <%
-        String editEmpUrl = basePath + "pages/back/emp/EmpServletBack/edit";
+        String editEmpUrl = basePath + "/pages/back/emp/EmpServletBack/edit";
     %>
     <jsp:include page="/pages/plugins/include_javascript_head.jsp"/>
     <script type="text/javascript" src="js/pages/back/emp/emp_add.js"></script>
