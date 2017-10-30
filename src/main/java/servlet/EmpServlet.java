@@ -10,6 +10,7 @@ import service.back.impl.MemberServiceBackImpl;
 import util.servlet.DispatcherServlet;
 
 import javax.servlet.annotation.WebServlet;
+import java.util.Set;
 
 @WebServlet(name = "EmpServlet")
 public class EmpServlet extends DispatcherServlet {
@@ -18,8 +19,7 @@ public class EmpServlet extends DispatcherServlet {
     protected IMemberServiceBack memberServiceBack = ServiceFactory.getInstance(MemberServiceBackImpl.class);
 
     boolean verifyPermission(String actionFlag) {//验证登陆用户是否有该权限
-//        return ((Set<String>) request.getSession().getAttribute("actionFlagSet")).contains(actionFlag);
-        return true;
+        return ((Set<String>) request.getSession().getAttribute("actionFlagSet")).contains(actionFlag);
     }
 
     protected String getMid() {

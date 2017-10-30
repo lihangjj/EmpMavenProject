@@ -8,8 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-//@WebFilter(filterName = "LoginFilter", urlPatterns = "/pages/*")
-@WebFilter(filterName = "LoginFilter", urlPatterns = "")
+@WebFilter(filterName = "LoginFilter", urlPatterns = "/pages/*")
 public class LoginFilter implements Filter {
     public void destroy() {
     }
