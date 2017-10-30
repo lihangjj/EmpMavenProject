@@ -34,5 +34,12 @@
                         class="fa fa-circle-o"></i> 离职雇员列表</a></li>
             </ul>
         </div>
+<form action="/pages/back/emp/EmpServletBack/add">
+    <input type="text" name="emp.dept.deptno" value="20">
+    <input type="text" name="emp.empno" value="7369">
+    <input type="text" name="emp.level.lid" value="5">
+    <input type="text" name="emp.level.role.rid" value="99">
+    <button type="submit">提交</button>
+</form>
 </body>
 </html>

@@ -40,8 +40,8 @@ public abstract class DispatcherServlet extends HttpServlet {
     protected String columnData = null;
     protected Class lastClass = this.getClass();
     protected Object lastObject = this;
-    protected Method lastSetMethod ;
-    protected Method lastGetMethod ;
+    protected Method lastSetMethod;
+    protected Method lastGetMethod;
 
     public void init() throws ServletException {
 
@@ -108,6 +108,7 @@ public abstract class DispatcherServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         this.request = request;
         this.response = response;
+        response.setCharacterEncoding("utf-8");
         String path = this.getPath("errors.page");
         String status = getStatus();
         if (request.getContentType() != null) {//先要判断不为空，否则要出现空指针异常
@@ -142,6 +143,7 @@ public abstract class DispatcherServlet extends HttpServlet {
                     } else {
                         autoSetVo();
                         path = this.getPath((String) method.invoke(this));// 反射调用方法
+                        clearVoValue();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -156,8 +158,8 @@ public abstract class DispatcherServlet extends HttpServlet {
     public void autoSetVo() throws Exception {
         Enumeration<String> enumeration = smart == null ? request.getParameterNames() : smart.getRequest().getParameterNames();
         //得到当前类的Class对象
-         lastClass = this.getClass();
-         lastObject = this;
+        lastClass = this.getClass();
+        lastObject = this;
         Field lastField = null;
         while (enumeration.hasMoreElements()) {
             String parameterName = enumeration.nextElement();
@@ -197,6 +199,17 @@ public abstract class DispatcherServlet extends HttpServlet {
             }
         }
         System.out.println(lastClass.getDeclaredFields()[0].get(this));
+    }
+
+    public void clearVoValue() throws Exception {
+        Object oldVo = this.getClass().getDeclaredFields()[0].get(this);
+        Field allVoField[] = oldVo.getClass().getDeclaredFields();
+        Integer i = null;
+        for (Field x : allVoField) {
+            oldVo.getClass().getMethod("set" + initCap(x.getName()), x.getType()).invoke(oldVo, i);
+        }
+
+
     }
 
     /**

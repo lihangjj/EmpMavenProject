@@ -1,6 +1,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%@ include file="/pages/plugins/include_static_head.jsp" %>
+
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -54,24 +55,29 @@
                 </a>
                     <ul class="treeview-menu">
                         <li class="${param.action=='dept:list' ? 'active' : ''}"><a
-                                href="pages/back/dept/dept_list.jsp"><i
+                                href="/pages/back/dept/DeptServletBack/list"><i
                                 class="fa fa-circle-o"></i> 部门列表</a></li>
                     </ul>
                 </li>
             </c:if>
 
             <c:if test="${res3==1}">
-                <li class="${param.role=='emp' ? 'active' : ''} treeview"><a href="<%=basePath%>pages/index.jsp"> <i class="fa  fa-folder-open"></i>
+                <li class="${param.role=='emp' ? 'active' : ''} treeview"><a href="<%=basePath%>pages/index.jsp"> <i
+                        class="fa  fa-folder-open"></i>
                     <span>雇员管理</span> <i class="fa fa-angle-left pull-right"></i>
                 </a>
                     <ul class="treeview-menu">
-                        <li class="${param.action=='emp:add' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/addPre"><i
+                        <li class="${param.action=='emp:add' ? 'active' : ''}"><a
+                                href="pages/back/emp/EmpServletBack/addPre"><i
                                 class="fa fa-circle-o"></i> 雇员入职</a></li>
-                        <li class="${param.action=='emp:list' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/list?flag=1"><i
+                        <li class="${param.action=='emp:list' ? 'active' : ''}"><a
+                                href="pages/back/emp/EmpServletBack/list?flag=1&currentPage=1"><i
                                 class="fa fa-circle-o"></i> 在职雇员列表</a></li>
-                        <li class="${param.action=='emp:listOut' ? 'active' : ''}"><a href="pages/back/emp/EmpServletBack/list?flag=0"><i
+                        <li class="${param.action=='emp:listOut' ? 'active' : ''}"><a
+                                href="pages/back/emp/EmpServletBack/list?flag=0&currentPage=1"><i
                                 class="fa fa-circle-o"></i> 离职雇员列表</a></li>
-                    </ul></li>
+                    </ul>
+                </li>
             </c:if>
 
         </ul>

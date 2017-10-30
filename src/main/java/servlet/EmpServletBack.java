@@ -102,6 +102,7 @@ public class EmpServletBack extends EmpServlet {
                 request.setAttribute("allLevels", allLevels);
                 request.setAttribute("allDepts", allDepts);
                 int allRecorders = (int) map.get("allRecorders");
+
                 request.setAttribute("allEmps", allEmps);
                 request.setAttribute("allRecorders", allRecorders);
                 request.setAttribute("flag", flag);

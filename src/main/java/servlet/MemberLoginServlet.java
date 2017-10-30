@@ -17,6 +17,9 @@ import java.util.Set;
 public class MemberLoginServlet extends DispatcherServlet {
     public Member member = new Member();
 
+    public Member getMember() {
+        return member;
+    }
 
     String login() {
         try {

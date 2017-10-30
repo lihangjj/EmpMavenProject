@@ -29,7 +29,7 @@
     String parameterValue = null;
     keyWord = request.getAttribute("keyWord") == null ? "" : (String) request.getAttribute("keyWord");
     column = request.getAttribute("column") == null ? null : (String) request.getAttribute("column");
-    url = request.getAttribute("url") == null ? null : (String) request.getAttribute("url");
+        url = request.getAttribute("url") == null ? null : (String) request.getAttribute("url");
     if (url != null && url.contains("?")) {
         String parameterNameAndValue = url.substring(url.lastIndexOf("?") + 1);
         String nameValue[] = parameterNameAndValue.split("=");
@@ -42,18 +42,20 @@
     lineSize = request.getAttribute("lineSize") == null ? 10 : (int) request.getAttribute("lineSize");
     allRecorders = request.getAttribute("allRecorders") == null ? 0 : (int) request.getAttribute("allRecorders");
     pageSize = (allRecorders + lineSize - 1) / lineSize;
+    if (pageSize < currentPage) {
+        currentPage = 1;
+    }
 
 %>
 <div class="row">
-
-    <div class="col-md-2 form-inline pull-right" >
-        <span class="splitFont">每页显示<select class="form-control" style="margin: 0px"
-                                             onchange="goSplit('<%=url%>',1,this.value,'<%=column%>','<%=keyWord%>','<%=parameterName%>',<%=parameterValue%>)">
+    <div class="col-md-2 form-inline pull-right">
+        <span class="splitFont">每页显示<select id="showLine" class="form-control" style="margin: 0px"
+                                            onchange="goSplit('<%=url%>',1,this.value,'<%=column%>','<%=keyWord%>','<%=parameterName%>',<%=parameterValue%>)">
 
                 <%
                     for (int x = 1; x < 21; x++) {
                 %>
-                <option <%=lineSize==x?"selected":""%>><%=x%></option>
+                <option <%=lineSize == x ? "selected" : ""%>><%=x%></option>
                 <%
                     }
                 %>
