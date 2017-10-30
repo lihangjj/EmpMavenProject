@@ -9,7 +9,7 @@
         String editEmpUrl = basePath + "pages/back/emp/EmpServletBack/editPre";
     %>
     <jsp:include page="/pages/plugins/include_javascript_head.jsp"/>
-    <script type="text/javascript" src="js/pages/back/emp/emp_list.js"></script>
+    <script type="text/javascript" src="/js/pages/back/emp/emp_list.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">

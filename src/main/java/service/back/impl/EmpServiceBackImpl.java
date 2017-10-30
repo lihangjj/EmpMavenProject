@@ -1,6 +1,10 @@
 package service.back.impl;
 
-import dao.impl.*;
+import dao.IDeptDAO;
+import dao.impl.DeptDAOImpl;
+import dao.impl.ElogDAOImpl;
+import dao.impl.EmpDAOImpl;
+import dao.impl.LevelDAOImpl;
 import factory.DAOFactory;
 import service.AbstractService;
 import service.back.IEmpServiceBack;
@@ -33,7 +37,7 @@ public class EmpServiceBackImpl extends AbstractService implements IEmpServiceBa
                         elog.setComm(emp.getComm());
                         elog.setFlag(emp.getFlag());
                         elog.setSflag(0);
-                        elog.setNote(new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ":刚入职" + note);
+                        elog.setNote(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ":刚入职" + note);
                         return DAOFactory.getInstance(ElogDAOImpl.class).doCreate(elog);
                     }
                 }
@@ -82,7 +86,8 @@ public class EmpServiceBackImpl extends AbstractService implements IEmpServiceBa
         int sflag = oldEmp.getSal() < emp.getSal() ? 1 : oldEmp.getSal().equals(emp.getSal()) ? 3 : 2;
         elog.setFlag(emp.getFlag());
         elog.setSflag(sflag);
-        elog.setNote(new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ":" + note);
+        String status = sflag == 1 ? "工资增加操作" : sflag == 2 ? "工资减少操作" : "工资未改动";
+        elog.setNote(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ":" + status + ":" + note);
         if (DAOFactory.getInstance(EmpDAOImpl.class).doUpdate(emp)) {
             return DAOFactory.getInstance(ElogDAOImpl.class).doCreate(elog);
         }
@@ -134,9 +139,38 @@ public class EmpServiceBackImpl extends AbstractService implements IEmpServiceBa
 
     @Override
     public Boolean leave(String ids) throws Exception {
-        return DAOFactory.getInstance(EmpDAOImpl.class).leave(ids);
-    }
+        if (DAOFactory.getInstance(EmpDAOImpl.class).leave(ids)) {//如果批量离职成功
+            String[] id = ids.split("\\|");
+            int count = 0;
+            IDeptDAO iDeptDAO = DAOFactory.getInstance(DeptDAOImpl.class);
+            for (String x : id) {
+                Emp emp = DAOFactory.getInstance(EmpDAOImpl.class).findById(Integer.valueOf(x));
+                Dept d = iDeptDAO.findById(emp.getDeptno());
+                d.setCurrnum(d.getCurrnum() - 1);
+                if (iDeptDAO.doUpdate(d)) {
+                    emp.setFlag(0);
+                    Elog elog = new Elog();
+                    elog.setEmpno(emp.getEmpno());
+                    elog.setDeptno(emp.getDeptno());
+                    elog.setMid(emp.getMid());
+                    elog.setLid(emp.getLid());
+                    elog.setJob(emp.getJob());
+                    elog.setSal(emp.getSal());
+                    elog.setComm(emp.getComm());
+                    elog.setFlag(emp.getFlag());
+                    elog.setSflag(3);
+                    String status = "雇员离职操作";
+                    elog.setNote(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()) + ":" + status + ":");
+                    if (DAOFactory.getInstance(ElogDAOImpl.class).doCreate(elog)) {
+                        count++;
+                    }
+                }
+            }
+            return count == id.length;
 
+        }
+        return false;
+    }
 
 
 }

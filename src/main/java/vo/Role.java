@@ -2,9 +2,9 @@ package vo;
 
 import java.io.Serializable;
 
-public class Role implements Serializable{
-        private String title,flag;
-        private Integer rid;
+public class Role implements Serializable {
+    private String title, flag;
+    private Integer rid;
 
     public String getTitle() {
         return title;

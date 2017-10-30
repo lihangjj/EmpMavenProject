@@ -4,11 +4,13 @@ import dao.AbstractDAOImpl;
 import dao.IEmpDAO;
 import vo.Emp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EmpDAOImpl extends AbstractDAOImpl<Integer, Emp> implements IEmpDAO {
     public EmpDAOImpl() throws Exception {
         super(Emp.class);
     }
-
 
 
     @Override
@@ -23,4 +25,22 @@ public class EmpDAOImpl extends AbstractDAOImpl<Integer, Emp> implements IEmpDAO
         int[] count = pre.executeBatch();
         return count.length == id.length;
     }
+
+    @Override
+    public List<Emp> findEmpsByDept(int deptno) throws Exception {
+        bufSelectAll();
+        List<Emp> list = new ArrayList<>();
+        buf.append(" where deptno=" + deptno);
+        System.out.println(buf.toString());
+        pre = conn.prepareStatement(buf.toString());
+        res = pre.executeQuery();
+        while (res.next()) {
+            Emp emp = new Emp();
+            voSet(emp);
+            list.add(emp);
+
+        }
+        return list;
+    }
+
 }
