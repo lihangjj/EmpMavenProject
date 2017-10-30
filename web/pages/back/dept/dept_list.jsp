@@ -49,6 +49,7 @@
                                         </tr>
                                     </c:forEach>
                                 </table>
+                                <jsp:include page="/pages/plugins/include_alert.jsp"></jsp:include>
 
                             </div>
                         </div>
@@ -93,7 +94,6 @@
                             <button class="btn" id="pre" disabled>上一页</button>
                             <button class="btn" id="next">下一页</button>
                         </div>
-
                     </div>
                 </div>
             </div>

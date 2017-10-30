@@ -47,8 +47,6 @@ $(function () {
         if (currentPage>1){
             currentPage--;
         }
-        alert(currentPage+"当前页");
-        alert(pageSize+"总页数");
         if (currentPage == pageSize) {
             $("#next").attr("disabled", "true");
         } else {
@@ -67,8 +65,6 @@ $(function () {
         if (currentPage<pageSize){
             currentPage++;
         }
-        alert(currentPage+"当前页");
-        alert(pageSize+"总页数");
         if (currentPage == pageSize) {
             $("#next").attr("disabled", "true");
         } else {
